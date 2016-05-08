@@ -7,6 +7,9 @@ export class Welcome {
   heading = 'Calls';
 
   constructor(http, bindingEngine) {
+
+    this.baseAddress = "http://mycalls.azurewebsites.net/api/";
+
     this.http = http;
     this.bindingEngine = bindingEngine;
     
@@ -26,7 +29,7 @@ export class Welcome {
 
     this.customFilterName = null;
     this.calls = [];
-    this.configHttp();
+    //this.configHttp();
 
     this.subscriptions = [];
 
@@ -62,7 +65,7 @@ export class Welcome {
   }
 
   loadCustomFilters() {
-    this.http.fetch('calls/CustomFilters', { method: 'GET' })
+      this.http.fetch(this.baseAddress+'calls/CustomFilters', { method: 'GET' })
       .then(this.parseJson)
       .then(data => {
         this.customFilterList = data;
@@ -71,7 +74,7 @@ export class Welcome {
 
 
   loadFilterProperties() {
-    this.http.fetch('calls/FilterPropertyInfos', { method: 'GET' })
+      this.http.fetch(this.baseAddress+'calls/FilterPropertyInfos', { method: 'GET' })
       .then(this.parseJson)
       .then(data => {
         this.filterPropertyInfoList = data;
@@ -80,7 +83,7 @@ export class Welcome {
 
   loadCalls(filters) {
     this.isLoading = true;
-    this.http.fetch('calls/data', {
+    this.http.fetch(this.baseAddress+'calls/data', {
       method: 'POST',
       body: json(filters)
     })
@@ -118,7 +121,7 @@ export class Welcome {
     this.selectedFilters.splice(idx, 1);
 
     if (this.selectedFilters.length === 0) {
-      this.http.fetch('calls/deleteCustomFilter/' + this.selectedCustomFilter.Name, { method: 'DELETE' })
+        this.http.fetch(this.baseAddress+'calls/deleteCustomFilter/' + this.selectedCustomFilter.Name, { method: 'DELETE' })
         .then(t => this.loadCustomFilters());
     }
 
@@ -133,26 +136,20 @@ export class Welcome {
       Properties: this.selectedFilters
     };
 
-    this.http.fetch('calls/saveCustomFilter', {
+    this.http.fetch(this.baseAddress+'calls/saveCustomFilter', {
       method: 'POST',
       body: json(filterParam)
     })
       .then(this.parseJson)
-      .then(data => {
-        //this.calls = data;
+      .then(data => {        
       }).then(t => this.loadCustomFilters());
   }
-
-
-
-
 
 
 
   parseJson(response) {
     return response.json();
   }
-
 
 
   deactivate() {

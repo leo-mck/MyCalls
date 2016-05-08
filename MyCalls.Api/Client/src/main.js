@@ -1,6 +1,8 @@
 /*eslint-disable no-var,no-unused-vars*/
 var Promise = require('bluebird'); // Promise polyfill for IE11
 
+import 'whatwg-fetch';
+
 import { bootstrap } from 'aurelia-bootstrapper-webpack';
 
 import 'bootstrap';
