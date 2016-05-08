@@ -1,0 +1,131 @@
+<template>
+        
+    <section class="au-animate">
+        
+
+        <div class="container">
+            <div class="panel panel-primary">
+                <div class="panel-heading">
+                    <h3 class="panel-title">${heading}</h3>
+                </div>
+                <div class="panel-body">
+                    <div class="well filters">
+                        <section show.bind="customFilterList.length" style="margin-bottom: 12px">
+                            <label for="customFilters">My Filters</label>
+                            <select class="form-control" id="customFilters" value.bind="selectedCustomFilter">
+                                <option value="">Select a filter...</option>
+                                <option repeat.for="customFilter of customFilterList" model.bind="customFilter">${customFilter.Name}</option>
+                            </select>
+                        </section>
+                        <section class="well filters newfilter">
+
+                            <div class="form-inline">
+                                <div class="input-group">
+                                    <span class="input-group-addon">
+                                        <select value.bind="selectedCondition" disabled.bind="selectedFilters.length === 0">
+                                            <option value="0">AND</option>
+                                            <option value="1">OR</option>
+                                        </select>
+                                    </span>
+                                    <select class="form-control" value.bind="selectedFilterPropertyInfo">
+                                        <option repeat.for="filterPropertyInfo of filterPropertyInfoList" model.bind="filterPropertyInfo">${filterPropertyInfo.Name}</option>
+                                    </select>
+                                </div>
+
+                                <!--TODO: add other comparison modes based on the filter type -->
+                                <select class="form-control" value.bind="selectedCompareMode" show.bind="(selectedFilterPropertyInfo.FilterType === 1)">
+                                    <option value="1">Greater than</option>
+                                    <option value="2">Less than</option>
+                                </select>
+
+
+
+                                <select class="form-control" show.bind="selectedFilterPropertyInfo.Data" value.bind="filterValue">
+                                    <option repeat.for="data of selectedFilterPropertyInfo.Data">${data.Name}</option>
+                                </select>
+
+
+
+                                <div class="input-group">
+                                    <input type="text" value.bind="filterValue" class="form-control" placeholder="Search for..." show.bind="!selectedFilterPropertyInfo.Data"/>
+                                    <span class="input-group-btn">
+                                        <button class="btn btn-default" click.trigger="addFilter()" disabled.bind="!filterValue">
+                                            <i class="fa fa-plus"></i>
+                                        </button>
+                                    </span>
+                                </div>
+                            </div>
+
+                            <ul class="list-group" style="margin-top: 6px">
+                                <li class="list-group-item list-group-item-info" repeat.for="filter of selectedFilters">
+                                    <b>${filter.Condition === 0 ? 'AND' : 'OR'}</b> ${filter.Info.Name} <b>${filter.CompareMode | compareMode}</b> ${filter.Value}
+                                    <button class="btn btn-sm btn-danger pull-right" click.trigger="deleteFilter(filter)"><i class="fa fa-close fa-pull-right"></i></button>
+                                </li>
+                                <li class="list-group-item" show.bind="selectedFilters.length">
+                                    <div class="input-group">
+                                        <input type="text" value.bind="customFilterName" class="form-control" placeholder="Custom filter name">
+                                        <span class="input-group-btn">
+                                                <button class="btn btn-default" click.trigger="saveFilter()" disabled.bind="!customFilterName">
+                                                    <i class="fa fa-save"></i>
+                                                </button>
+                                            </span>
+                                    </div>
+                                </li>
+                            </ul>
+
+                        </section>
+                    </div>
+
+
+                    <div style="position:relative">
+                        
+                    
+                    
+                                            
+
+                    <table class="table table-striped table-hover">
+                        <thead>
+                        <th>Caller</th>
+                        <th>Calleee</th>
+                        <th>Duration</th>
+                        </thead>
+                        <tbody>
+                        <tr repeat.for="call of calls">
+                            <td>
+                                ${call.Caller.Name}
+                                <span repeat.for="tag of call.Caller.Tags">
+                                                <span class="badge" css="background-color:${tag.Color}">${tag.Name}</span>
+                                            </span>
+                            </td>
+                            <td>
+                                ${call.Callee.Name}
+                                <span repeat.for="tag of call.Callee.Tags">
+                                                <span class="badge" css="background-color:${tag.Color}">${tag.Name}</span>
+                                            </span>
+                            </td>
+                            <td>${call.DurationSeconds | secondsToTime} <small>(${call.DurationSeconds} seconds)</small></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                    
+                    
+                    <div style="background-color: rgba(255, 255, 255, 0.77);height: 100%;position: absolute;top: 0;bottom: 0;left: 0;right: 0;" show.bind="isLoading">
+                        <div class="sk-folding-cube">
+                        <div class="sk-cube1 sk-cube"></div>
+                        <div class="sk-cube2 sk-cube"></div>
+                        <div class="sk-cube4 sk-cube"></div>
+                        <div class="sk-cube3 sk-cube"></div>
+                    </div>
+                    </div>
+                    </div>
+                </div>
+                <div class="panel-footer">
+                    <span class="small pull-right">
+                                made by <a href="https://telegram.me/leomck" target="_blank">@leomck</a>
+                            </span>
+                    <div class="clearfix"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+        </template>
